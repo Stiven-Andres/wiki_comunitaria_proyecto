@@ -1,0 +1,26 @@
+---
+- name: Desplegar Wiki Comunitaria
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars_files:
+    - group_vars/all.yml
+
+  pre_tasks:
+    - name: Información del despliegue
+      debug:
+        msg:
+          - "Servidor: {{ inventory_hostname }}"
+          - "IP: {{ ansible_host }}"
+
+  roles:
+    - role: docker
+    - role: dokuwiki
+
+  post_tasks:
+    - name: Wiki lista
+      debug:
+        msg:
+          - "Accede en: http://localhost"
+          - "Primera config: http://localhost/install.php"

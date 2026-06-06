@@ -1,0 +1,43 @@
+---
+- name: Crear directorio del proyecto
+  file:
+    path: "{{ docker_compose_dir }}"
+    state: directory
+    mode: '0755'
+  become: true
+
+- name: Crear directorio de datos
+  file:
+    path: "{{ docker_compose_dir }}/data"
+    state: directory
+    mode: '0755'
+  become: true
+
+- name: Copiar docker-compose.yml
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ docker_compose_dir }}/docker-compose.yml"
+  become: true
+
+- name: Levantar DokuWiki
+  command: docker compose up -d
+  args:
+    chdir: "{{ docker_compose_dir }}"
+  become: true
+
+- name: Esperar a que DokuWiki esté listo
+  wait_for:
+    host: localhost
+    port: 80
+    delay: 10
+    timeout: 90
+
+- name: Confirmar contenedor corriendo
+  command: docker ps
+  register: ps_result
+  changed_when: false
+  become: true
+
+- name: Mostrar contenedores
+  debug:
+    msg: "{{ ps_result.stdout_lines }}"

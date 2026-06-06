@@ -1,0 +1,6 @@
+---
+project_name: wiki-comunitaria
+wiki_service_port: 80
+docker_compose_dir: /opt/wiki-comunitaria
+docker_compose_file: docker-compose.yml
+timezone: America/Bogota

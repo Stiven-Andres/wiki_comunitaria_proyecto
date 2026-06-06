@@ -1,0 +1,36 @@
+---
+- name: Actualizar apt
+  apt:
+    update_cache: yes
+  become: true
+
+- name: Instalar dependencias
+  apt:
+    name:
+      - curl
+      - ca-certificates
+      - python3-pip
+    state: present
+  become: true
+
+- name: Instalar Docker
+  apt:
+    name: docker.io
+    state: present
+  become: true
+
+- name: Iniciar Docker
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+  become: true
+
+- name: Verificar Docker
+  command: docker --version
+  register: docker_version
+  changed_when: false
+
+- name: Mostrar versión
+  debug:
+    msg: "{{ docker_version.stdout }}"

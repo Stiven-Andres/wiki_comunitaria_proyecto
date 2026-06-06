@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  dokuwiki:
+    image: linuxserver/dokuwiki:latest
+    container_name: dokuwiki
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ={{ timezone }}
+    volumes:
+      - ./data:/config
+    ports:
+      - "{{ wiki_service_port }}:80"
+    restart: unless-stopped
